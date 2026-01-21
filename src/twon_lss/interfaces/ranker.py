@@ -20,7 +20,6 @@ class RankerArgsInterface(abc.ABC, pydantic.BaseModel):
         default_factory=RankerInterfaceWeights
     )
     noise: Noise = pydantic.Field(default_factory=Noise)
-    persistence: int = 1
 
 
 class RankerInterface(abc.ABC, pydantic.BaseModel):
