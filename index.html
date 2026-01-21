@@ -1,0 +1,631 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="./" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>TWON - Large Scale Simulation (LSS) &#8212; TWON LSS  documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=eba8b062" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="_static/doctools.js?v=9bcbadda"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'index';</script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Simulations" href="modules.simulations.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="#">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">TWON LSS  documentation</p>
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="modules.simulations.html">Simulations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules.interfaces.html">Interfaces</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules.schemas.html">Schemas</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules.utilities.html">Utilities</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="_sources/index.rst" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.rst</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>TWON - Large Scale Simulation (LSS)</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">TWON - Large Scale Simulation (LSS)</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#features">Features</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#architecture">Architecture</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#network-mechanics">Network Mechanics</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#agent-user-modeling">Agent (User) Modeling</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#discourse-evaluation">Discourse Evaluation</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#project-structure">Project Structure</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#core-components">Core Components</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#network-mechanics-src-twon-lss-schemas-network-py">Network Mechanics (<code class="docutils literal notranslate"><span class="pre">src/twon_lss/schemas/network.py</span></code>)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#agent-modeling-src-twon-lss-interfaces-agent-py">Agent Modeling (<code class="docutils literal notranslate"><span class="pre">src/twon_lss/interfaces/agent.py</span></code>)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#content-ranking-src-twon-lss-interfaces-ranker-py">Content Ranking (<code class="docutils literal notranslate"><span class="pre">src/twon_lss/interfaces/ranker.py</span></code>)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#feed-management-src-twon-lss-schemas-feed-py">Feed Management (<code class="docutils literal notranslate"><span class="pre">src/twon_lss/schemas/feed.py</span></code>)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#simulation-engine-src-twon-lss-interfaces-simulation-py">Simulation Engine (<code class="docutils literal notranslate"><span class="pre">src/twon_lss/interfaces/simulation.py</span></code>)</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#output-files">Output Files</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#available-simulations">Available Simulations</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#bcm-bounded-confidence-model">BCM (Bounded Confidence Model)</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#twon-base">TWON-Base</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#related-projects">Related Projects</a></li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#table-of-contents">Table of Contents</a></li>
+</ul>
+
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="twon-large-scale-simulation-lss">
+<h1>TWON - Large Scale Simulation (LSS)<a class="headerlink" href="#twon-large-scale-simulation-lss" title="Link to this heading">#</a></h1>
+<p>A modular, scalable framework for simulating large-scale social media interactions and discourse dynamics. TWON-LSS enables researchers to model agent behavior, content propagation, and network effects in social platforms.</p>
+<section id="features">
+<h2>Features<a class="headerlink" href="#features" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>Lightweight, API-driven architecture: Custom component integration with third-party service connections</p></li>
+<li><p>Modular design: Easy customization of network mechanics, agent models, and evaluation pipelines</p></li>
+<li><p>Multiple simulation types: Built-in BCM (Bounded Confidence Model) and TWON-base simulations</p></li>
+<li><p>LLM integration: Support for language model-powered agents with configurable instructions</p></li>
+</ul>
+</section>
+<section id="architecture">
+<h2>Architecture<a class="headerlink" href="#architecture" title="Link to this heading">#</a></h2>
+<section id="network-mechanics">
+<h3>Network Mechanics<a class="headerlink" href="#network-mechanics" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>Content ranking and recommendation algorithms</p></li>
+<li><p>Feed/discourse structure management (linear, tree-like)</p></li>
+<li><p>Message and notification routing system</p></li>
+<li><p>Platform-specific behaviors (e.g., Twitter-like vs. Reddit-like)</p></li>
+</ul>
+</section>
+<section id="agent-user-modeling">
+<h3>Agent (User) Modeling<a class="headerlink" href="#agent-user-modeling" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>User behavior and lifecycle simulation</p></li>
+<li><p>Interaction scheduling and patterns</p></li>
+<li><p>Content consumption and engagement logic</p></li>
+<li><p>LLM API integration for content generation</p></li>
+</ul>
+</section>
+<section id="discourse-evaluation">
+<h3>Discourse Evaluation<a class="headerlink" href="#discourse-evaluation" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>Count-based aggregation tools</p></li>
+<li><p>Automated content classification</p></li>
+<li><p>Analysis pipeline integration</p></li>
+<li><p>Results compilation and export</p></li>
+</ul>
+</section>
+</section>
+<section id="project-structure">
+<h2>Project Structure<a class="headerlink" href="#project-structure" title="Link to this heading">#</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>twon_lss/
+├── interfaces/           # Abstract base classes
+│   ├── agent.py         # Agent behavior interface
+│   ├── ranker.py        # Content ranking interface
+│   └── simulation.py    # Simulation orchestration
+├── schemas/             # Core data models
+│   ├── user.py         # User representation
+│   ├── post.py         # Post and interaction data
+│   ├── feed.py         # Content aggregation
+│   └── network.py      # Social network structure
+├── simulations/         # Implemented simulation types
+│   ├── bcm/            # Bounded Confidence Model
+│   └── twon_base/      # LLM-powered social simulation
+└── utility/            # Supporting utilities
+    ├── llm.py          # Language model integration
+    └── noise.py        # Randomization utilities
+</pre></div>
+</div>
+</section>
+<section id="core-components">
+<h2>Core Components<a class="headerlink" href="#core-components" title="Link to this heading">#</a></h2>
+<section id="network-mechanics-src-twon-lss-schemas-network-py">
+<h3>Network Mechanics (<code class="docutils literal notranslate"><span class="pre">src/twon_lss/schemas/network.py</span></code>)<a class="headerlink" href="#network-mechanics-src-twon-lss-schemas-network-py" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>NetworkX-based graph structures for user connections</p></li>
+<li><p>Neighbor discovery and relationship management</p></li>
+<li><p>JSON serialization for analysis and visualization</p></li>
+</ul>
+</section>
+<section id="agent-modeling-src-twon-lss-interfaces-agent-py">
+<h3>Agent Modeling (<code class="docutils literal notranslate"><span class="pre">src/twon_lss/interfaces/agent.py</span></code>)<a class="headerlink" href="#agent-modeling-src-twon-lss-interfaces-agent-py" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>Abstract agent interface with action selection and content generation</p></li>
+<li><p>Support for reading, liking, and posting behaviors</p></li>
+<li><p>Memory management and interaction patterns</p></li>
+</ul>
+</section>
+<section id="content-ranking-src-twon-lss-interfaces-ranker-py">
+<h3>Content Ranking (<code class="docutils literal notranslate"><span class="pre">src/twon_lss/interfaces/ranker.py</span></code>)<a class="headerlink" href="#content-ranking-src-twon-lss-interfaces-ranker-py" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>Configurable ranking algorithms combining network and individual scores</p></li>
+<li><p>Noise injection for realistic variability</p></li>
+<li><p>Extensible scoring mechanisms</p></li>
+</ul>
+</section>
+<section id="feed-management-src-twon-lss-schemas-feed-py">
+<h3>Feed Management (<code class="docutils literal notranslate"><span class="pre">src/twon_lss/schemas/feed.py</span></code>)<a class="headerlink" href="#feed-management-src-twon-lss-schemas-feed-py" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>Post aggregation and filtering by user</p></li>
+<li><p>Read/unread state tracking</p></li>
+<li><p>Content timeline management</p></li>
+</ul>
+</section>
+<section id="simulation-engine-src-twon-lss-interfaces-simulation-py">
+<h3>Simulation Engine (<code class="docutils literal notranslate"><span class="pre">src/twon_lss/interfaces/simulation.py</span></code>)<a class="headerlink" href="#simulation-engine-src-twon-lss-interfaces-simulation-py" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>Step-by-step simulation execution with progress tracking</p></li>
+<li><p>Automatic result export and serialization</p></li>
+<li><p>Configurable interaction limits and parameters</p></li>
+</ul>
+</section>
+</section>
+<section id="output-files">
+<h2>Output Files<a class="headerlink" href="#output-files" title="Link to this heading">#</a></h2>
+<p>After running a simulation, the following files are generated:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">network.json</span></code>: Social network structure and connections</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">feed.json</span></code>: Complete post history and interactions</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">individuals.json</span></code>: Final agent states and configurations</p></li>
+</ul>
+</section>
+<section id="available-simulations">
+<h2>Available Simulations<a class="headerlink" href="#available-simulations" title="Link to this heading">#</a></h2>
+<section id="bcm-bounded-confidence-model">
+<h3>BCM (Bounded Confidence Model)<a class="headerlink" href="#bcm-bounded-confidence-model" title="Link to this heading">#</a></h3>
+<p>A mathematical model simulating opinion dynamics where agents adjust their opinions based on similar others within a confidence threshold.</p>
+<p><strong>Features:</strong></p>
+<ul class="simple">
+<li><p>Epsilon-delta opinion updating mechanism</p></li>
+<li><p>Configurable confidence bounds</p></li>
+<li><p>Memory-based opinion tracking</p></li>
+</ul>
+</section>
+</section>
+<section id="twon-base">
+<h2>TWON-Base<a class="headerlink" href="#twon-base" title="Link to this heading">#</a></h2>
+<p>A comprehensive social media simulation with LLM-powered agents that can read, evaluate, and generate content.</p>
+<p><strong>Features:</strong></p>
+<ul class="simple">
+<li><p>Persona-driven agent behavior</p></li>
+<li><p>Content consumption and rating</p></li>
+<li><p>Dynamic post generation</p></li>
+<li><p>Similarity-based content ranking</p></li>
+</ul>
+</section>
+<section id="related-projects">
+<h2>Related Projects<a class="headerlink" href="#related-projects" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>OASIS: Open Agents Social Interaction Simulations on One Million Agents <a class="reference external" href="https://oasis.camel-ai.org">https://oasis.camel-ai.org</a></p></li>
+</ul>
+</section>
+</section>
+<hr class="docutils" />
+<section id="table-of-contents">
+<h1>Table of Contents<a class="headerlink" href="#table-of-contents" title="Link to this heading">#</a></h1>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="modules.simulations.html">Simulations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules.interfaces.html">Interfaces</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules.schemas.html">Schemas</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="modules.schemas.html#twon_lss.schemas.feed.Feed"><code class="docutils literal notranslate"><span class="pre">Feed</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules.schemas.html#twon_lss.schemas.network.Network"><code class="docutils literal notranslate"><span class="pre">Network</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules.schemas.html#twon_lss.schemas.post.Post"><code class="docutils literal notranslate"><span class="pre">Post</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules.schemas.html#twon_lss.schemas.user.User"><code class="docutils literal notranslate"><span class="pre">User</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="modules.utilities.html">Utilities</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="modules.utilities.html#twon_lss.utility.llm.LLM"><code class="docutils literal notranslate"><span class="pre">LLM</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules.utilities.html#twon_lss.utility.noise.Noise"><code class="docutils literal notranslate"><span class="pre">Noise</span></code></a></li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="right-next"
+       href="modules.simulations.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Simulations</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">TWON - Large Scale Simulation (LSS)</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#features">Features</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#architecture">Architecture</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#network-mechanics">Network Mechanics</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#agent-user-modeling">Agent (User) Modeling</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#discourse-evaluation">Discourse Evaluation</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#project-structure">Project Structure</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#core-components">Core Components</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#network-mechanics-src-twon-lss-schemas-network-py">Network Mechanics (<code class="docutils literal notranslate"><span class="pre">src/twon_lss/schemas/network.py</span></code>)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#agent-modeling-src-twon-lss-interfaces-agent-py">Agent Modeling (<code class="docutils literal notranslate"><span class="pre">src/twon_lss/interfaces/agent.py</span></code>)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#content-ranking-src-twon-lss-interfaces-ranker-py">Content Ranking (<code class="docutils literal notranslate"><span class="pre">src/twon_lss/interfaces/ranker.py</span></code>)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#feed-management-src-twon-lss-schemas-feed-py">Feed Management (<code class="docutils literal notranslate"><span class="pre">src/twon_lss/schemas/feed.py</span></code>)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#simulation-engine-src-twon-lss-interfaces-simulation-py">Simulation Engine (<code class="docutils literal notranslate"><span class="pre">src/twon_lss/interfaces/simulation.py</span></code>)</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#output-files">Output Files</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#available-simulations">Available Simulations</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#bcm-bounded-confidence-model">BCM (Bounded Confidence Model)</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#twon-base">TWON-Base</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#related-projects">Related Projects</a></li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#table-of-contents">Table of Contents</a></li>
+</ul>
+
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Simon Münker
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2026, Simon Münker.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
