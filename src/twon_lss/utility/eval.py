@@ -7,7 +7,7 @@ import plotly.graph_objects as go
 import plotly.express as px
 from sklearn.metrics.pairwise import cosine_similarity
 from collections import defaultdict
-from twon_lss.utility.llm import LLM
+from twon_lss.utility.llm import LLM, EmbeddingModelInterface
 import numpy as np
 from sklearn.decomposition import PCA
 import umap
@@ -20,7 +20,7 @@ import matplotlib.pyplot as plt
 class RunEvaluation(pydantic.BaseModel):
 
     path: str
-    embedding_model: LLM = None
+    embedding_model: EmbeddingModelInterface = None
     name: str = pydantic.Field(default_factory=lambda: "Run")
     df: pd.DataFrame = None
     model_config = pydantic.ConfigDict(arbitrary_types_allowed=True)
@@ -29,8 +29,8 @@ class RunEvaluation(pydantic.BaseModel):
 
     def model_post_init(self, __context: typing.Any):
         
-        data = json.loads(open(self.path).read())
-        self.feed = data
+        data = json.loads(open(self.path+"/feed.json").read())
+        self.feed = json.loads(open(self.path+"/feed.json").read())
 
         results_parsed = []
         for elem in data:
@@ -66,7 +66,7 @@ class RunEvaluation(pydantic.BaseModel):
             
     def _load_embeddings(self) -> bool:
         try:
-            self.df["embedding"] = list(np.load(f"{self.path}_embeddings.npz")["embeddings"])
+            self.df["embedding"] = list(np.load(f"{self.path}/embeddings.npz")["embeddings"])
             print("Found existing embeddings.")
             return True
         except FileNotFoundError:
@@ -106,25 +106,23 @@ class RunEvaluation(pydantic.BaseModel):
             return
 
         # Save embeddings
-        np.savez(f"{self.path}_embeddings.npz",
+        np.savez(f"{self.path}/embeddings.npz",
                 embeddings=np.array(self.df["embedding"].to_list())
         )
-        print(f"Saved repaired embeddings to {self.path}_embeddings.npz")
+        print(f"Saved repaired embeddings to {self.path}/embeddings.npz")
 
     def _generate_embeddings(self):
 
         print("Generating embeddings...")
-
-        embeddings: list = []
-        for i in range(0, len(self.df), 500):
-            embeddings.extend(self.embedding_model.extract(self.df["tweet"].tolist()[i:i+500])) # There is apparently a limit on the number of texts that can be processed at once
+        
+        embeddings: list = self.embedding_model.extract(self.df["tweet"].tolist()) # There is apparently a limit on the number of texts that can be processed at once
         self.df["embedding"] = embeddings
 
         # Save embeddings
-        np.savez(f"{self.path}_embeddings.npz",
+        np.savez(f"{self.path}/embeddings.npz",
                 embeddings=np.array(self.df["embedding"].to_list())
         )
-        print(f"Saved embeddings to {self.path}_embeddings.npz")
+        print(f"Saved embeddings to {self.path}/embeddings.npz")
 
     # Plotting Utilities
     def _make_figure(
@@ -285,6 +283,78 @@ class RunEvaluation(pydantic.BaseModel):
                 print(f"  {key}: {value}")        
 
         return stats
+
+
+    def consistency_per_user(self) -> pd.DataFrame:
+        """Compute consistency of embeddings per user."""
+        user_consistency = {}
+
+        for user in self.df["user"].unique():
+            user_embeddings = np.array(self.df[self.df["user"] == user]["embedding"].tolist())
+            if len(user_embeddings) > 1:
+                sim_matrix = cosine_similarity(user_embeddings)
+                # Take upper triangle without diagonal
+                upper_tri_indices = np.triu_indices_from(sim_matrix, k=1)
+                sims = sim_matrix[upper_tri_indices]
+                user_consistency[user] = np.mean(sims)
+            else:
+                user_consistency[user] = None  # Not enough data to compute consistency
+
+        consistency_df = pd.DataFrame.from_dict(user_consistency, orient='index', columns=['consistency'])
+        return consistency_df
+    
+    def plot_consistency_distribution(self) -> go.Figure:
+        """Plot distribution of user consistency."""
+        consistency_df = self.consistency_per_user()
+        consistency_df = consistency_df.dropna()
+
+        fig = go.Figure()
+        fig.add_trace(go.Histogram(
+            x=consistency_df['consistency'],
+            nbinsx=30,
+            name='User Consistency',
+            marker_color='blue',
+            opacity=0.75
+        ))
+
+        fig.update_layout(
+            title='Distribution of User Consistency',
+            xaxis_title='Consistency (Average Cosine Similarity)',
+            yaxis_title='Count',
+            bargap=0.2
+        )
+
+        return fig
+    
+    
+    @classmethod
+    def compare_consistency_between_runs(
+        cls,
+        runs: List["RunEvaluation"]
+    ) -> go.Figure:
+        """Compare consistency distributions between multiple runs."""
+        fig = go.Figure()
+
+        for run in runs:
+            consistency_df = run.consistency_per_user()
+            consistency_df = consistency_df.dropna()
+
+            fig.add_trace(go.Histogram(
+                x=consistency_df['consistency'],
+                nbinsx=30,
+                name=run.name,
+                opacity=0.5
+            ))
+
+        fig.update_layout(
+            title='Comparison of User Consistency Between Runs',
+            xaxis_title='Consistency (Average Cosine Similarity)',
+            yaxis_title='Count',
+            barmode='overlay',
+            bargap=0.2
+        )
+
+        return fig   
 
 
     # Comparing Runs
@@ -459,6 +529,9 @@ class RunEvaluation(pydantic.BaseModel):
             barmode='group'
         )
         return fig
+
+
+
 
 
     ### Deprecated Methods for Individual Runs
