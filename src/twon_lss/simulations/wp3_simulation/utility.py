@@ -93,7 +93,7 @@ def agent_parameter_estimation(posts_per_day, seed=42):
     # Reads per day: correlated with activation probability
     # More active users read more per day
     min_reads = activation_probability * 144 * 3
-    max_reads = min(activation_probability * 144 * 75, 750) # Cap at 750 reads/day
+    max_reads = min(activation_probability * 144 * 20, 750) # Cap at 750 reads/day
     reads_per_day = power_law_sample(min_reads, max_reads, a=3.0)
     
     # Calculate reads per activation
