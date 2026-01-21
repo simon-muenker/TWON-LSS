@@ -5,6 +5,9 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 import multiprocessing
 import random
 import numpy as np
+import os
+import time
+from rich.progress import track
 
 from twon_lss.interfaces import (
     AgentInterface,
@@ -16,9 +19,10 @@ from twon_lss.schemas import Feed, User, Post
 
 
 from twon_lss.simulations.wp3_simulation.agent import WP3Agent, AgentInstructions
-from twon_lss.simulations.wp3_simulation.ranker import RankerArgs, SemanticSimilarityRanker, RandomRanker
+from twon_lss.simulations.wp3_simulation.ranker import RankerArgs, SemanticSimilarityRanker, RandomRanker, ChronologicalRanker
 
 from twon_lss.simulations.wp3_simulation.utility import WP3LLM, agent_parameter_estimation, simulation_load_estimator
+from twon_lss.utility.llm import EmbeddingModelInterface
 
 __all__ = [
     "Simulation",
@@ -32,14 +36,18 @@ __all__ = [
     "WP3LLM",
     "agent_parameter_estimation",
     "simulation_load_estimator",
+    "ChronologicalRanker",
 ]
 
 
 class SimulationArgs(SimulationInterfaceArgs):
-    num_steps: int = 100
+    num_steps: int = 288
+    persistence: int = 144
 
 
 class Simulation(SimulationInterface):
+
+    embedding_model: typing.Union[EmbeddingModelInterface, None] = None
 
     def model_post_init(self, __context: typing.Any):
 
@@ -49,9 +57,10 @@ class Simulation(SimulationInterface):
         logging.debug(">f seeds removed for simulation run")
         
         # Generate initial embeddings if required
-        if hasattr(self.ranker, "llm") and self.ranker.llm is not None:
+        if hasattr(self, "embedding_model") and self.embedding_model is not None:
+            os.environ["TOKENIZERS_PARALLELISM"] = "false" # Must be set before importing transformers/tokenizers
             logging.debug(f">f generating embeddings for {len(self.feed)} feed posts")
-            embeddings = self.ranker.llm.extract(
+            embeddings = self.embedding_model.extract(
                 [post.content for post in self.feed]
             )
             for post, embedding in zip(self.feed, embeddings):
@@ -67,7 +76,6 @@ class Simulation(SimulationInterface):
         logging.debug(">f init simulation")
         self.output_path.mkdir(exist_ok=True)
         (self.output_path / "rankings").mkdir(exist_ok=True)
-
 
     def _wrapper_step_agent(
         self,
@@ -104,12 +112,16 @@ class Simulation(SimulationInterface):
             posts.append(Post(user=user, content=agent.post()))
         agent.posts.extend(posts)
 
+
+        if agent.dynamic_cognition:
+            agent.cognition_update()
+
         return user, agent, posts
     
 
     def _step(self, n: int = 0) -> None:
         # Strip feed to only recent posts for efficiency
-        stripped_feed = self.feed.filter_by_timestamp(n, self.ranker.args.persistence)
+        stripped_feed = self.feed.filter_by_timestamp(n, self.args.persistence)
         
         # Calculate post scores
         active_individuals = {user: agent for user, agent in self.individuals.items() if random.random() <= agent.activation_probability}
@@ -143,9 +155,9 @@ class Simulation(SimulationInterface):
             post.timestamp = n
 
         # Generate embeddings if required
-        if hasattr(self.ranker, "llm") and self.ranker.llm is not None:
+        if hasattr(self, "embedding_model") and self.embedding_model is not None:
             logging.debug(f">f generating embeddings for {len(posts)} posts")
-            embeddings = self.ranker.llm.extract([post.content for post in posts])
+            embeddings = self.embedding_model.extract([post.content for post in posts])
 
             for post, embedding in zip(posts, embeddings):
                 post.embedding = embedding
