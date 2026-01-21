@@ -1,3 +1,4 @@
+from abc import abstractmethod
 import logging
 import requests
 import typing
@@ -10,11 +11,11 @@ class Message(pydantic.BaseModel):
     role: typing.Literal["system", "user", "assistant"]
     content: str
 
-
 class Chat(pydantic.RootModel):
     root: typing.List[Message]
 
 
+# LLM Implementation
 class LLM(pydantic.BaseModel):
     api_key: str
 
@@ -26,8 +27,7 @@ class LLM(pydantic.BaseModel):
         response = requests.post(self.url, headers=headers, json=payload)
         return response.json()
     
-
-    def generate(self, chat: Chat, max_retries: int = 3) -> str:
+    def generate(self, chat: Chat, max_retries: int = 5) -> str:
         try:
             response: str = self._query(
                 {
@@ -44,6 +44,46 @@ class LLM(pydantic.BaseModel):
             raise RuntimeError("Failed to generate response from LLM after retries") from e
         
         return response
+
+
+
+# Embedding Model Interface and Implementations
+class EmbeddingModelInterface(pydantic.BaseModel):
+    @abstractmethod
+    def extract(self, text: typing.Optional[typing.Union[str, list]], max_retries: int = 3):
+        pass
+
+class LocalEmbeddingModel(EmbeddingModelInterface):
+    model_name: str = "mixedbread-ai/mxbai-embed-large-v1"
+    batch_size: int = 16
+    model: typing.Any = None
+    
+    def model_post_init(self, context):
+        from sentence_transformers import SentenceTransformer
+        self.model = SentenceTransformer("mixedbread-ai/mxbai-embed-large-v1")
+
+    def extract(self, text: typing.Optional[typing.Union[str, list]]):
+        if isinstance(text, str):
+            return self.model.encode([text])[0].tolist()
+        elif isinstance(text, list):
+            embeddings = []
+            for i in range(0, len(text), self.batch_size):
+                batch = text[i:i + self.batch_size]
+                emb_batch = self.model.encode(batch)
+                embeddings.extend([emb.tolist() for emb in emb_batch])
+            return embeddings
+        
+        
+class APIEmbeddingModel(EmbeddingModelInterface):
+    api_key: str
+    model: str = "Qwen/Qwen3-4B-Instruct-2507:nscale"
+    url: str = "https://router.huggingface.co/v1/chat/completions"
+
+    def _query(self, payload):
+        headers: dict = {"Authorization": f"Bearer {self.api_key}"}
+        response = requests.post(self.url, headers=headers, json=payload)
+        return response.json()
+    
 
     def extract(self, text: typing.Optional[typing.Union[str, list]], max_retries: int = 3):
         """
