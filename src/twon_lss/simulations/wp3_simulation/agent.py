@@ -27,21 +27,24 @@ class AgentInstructions(pydantic.BaseModel):
 
 class WP3Agent(AgentInterface):
     
-    llm: LLM
-    instructions: AgentInstructions
+    # LLM backbone
+    llm: LLM 
 
+    # Static variables
+    authentic_posts: list[str] = pydantic.Field(default_factory=list)
+    dynamic_cognition: bool = pydantic.Field(default=False)
     memory_length: int = pydantic.Field(default=4, ge=0, le=50)
+    instructions: AgentInstructions
     bio: str = pydantic.Field(default="")
-    cognition: str = pydantic.Field(default="")
-    
     activation_probability: float
     posting_probability: float
     read_amount: int
 
+    # Dynamic variables
+    cognition: str = pydantic.Field(default="")
     memory: typing.List[Message] = pydantic.Field(default_factory=list)
-    activations: int = 0
     posts: typing.List[Post] = pydantic.Field(default_factory=list)
-    
+    activations: int = 0
     
     def select_actions(self, post: Post):
         pass
@@ -54,12 +57,11 @@ class WP3Agent(AgentInterface):
             Chat(
                 [
                     Message(role="system", content=self._profile()),
-                    *self.memory[-self.memory_length * 2:],
+                    *self.memory[-self.memory_length:],
                     Message(role="user", content=prompt),
                 ]
             )
         )
-    
     
     # Actions
     def _profile(self) -> str:
@@ -69,9 +71,10 @@ class WP3Agent(AgentInterface):
         """
         Currently not used in the simulation, but can be called to update the agent's cognition based on its memory
         """
-        response: str = self._inference(self.instructions.cognition_update)
+        response: str = self._inference(self.instructions.cognition_update + "\nCurrent cognition: " + self.cognition)
         logging.debug(f"Agent response: {response}")
         self.cognition = response
+        
 
     def _like(self, post: Post, user: User) -> None:
         """
