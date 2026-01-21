@@ -12,11 +12,13 @@ from rich.progress import track
 
 from twon_lss.interfaces import AgentInterface, RankerInterface
 from twon_lss.schemas import User, Network, Feed, Post
+from twon_lss.utility.llm import EmbeddingModelInterface
 
 
 class SimulationInterfaceArgs(pydantic.BaseModel):
     num_steps: int = 100
     num_posts_to_interact_with: int = 5
+    persistence: int = 50
 
 
 class SimulationInterface(abc.ABC, pydantic.BaseModel):
