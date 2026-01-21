@@ -10,7 +10,7 @@ from twon_lss.interfaces import RankerInterface, RankerArgsInterface
 from twon_lss.schemas import User, Post, Feed
 from twon_lss.schemas.network import Network
 from twon_lss.simulations.wp3_simulation.agent import WP3Agent
-from twon_lss.utility import LLM
+from twon_lss.utility import LLM, EmbeddingModelInterface, LocalEmbeddingModel
 
 from sklearn.metrics.pairwise import cosine_similarity
 
@@ -37,10 +37,26 @@ class RandomRanker(RankerInterface):
 
     def _compute_individual(self, agent: WP3Agent, post: Post, feed: Feed) -> float:
         return random.random()
-    
 
+
+class ChronologicalRanker(RankerInterface):
+    args: RankerArgs = RankerArgs()
+
+    def __call__(
+        self, individuals: typing.List[User], feed: Feed, network: Network
+        ) -> typing.Dict[typing.Tuple[User, Post], float]:
+        # WP3 adapted call version because simulation step passes individuals instead of users at ranker call
+        # For this ranker we dont need individuals, so we drop them when passing to extract
+        return super().__call__(list(individuals.keys()), feed, network)
+    
+    def _compute_network(self, post: Post) -> float:
+        return post.timestamp
+
+    def _compute_individual(self, agent: WP3Agent, post: Post, feed: Feed) -> float:
+        return random.random() # So that we do not cut in generation order but order by timestamp only and shuffle within same timestamp posts
+
+    
 class SemanticSimilarityRanker(RankerInterface):
-    llm: LLM
     args: RankerArgs = RankerArgs()
 
     def __call__(
